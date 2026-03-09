@@ -12,8 +12,24 @@
     "engines": {
         "vscode": "^1.85.0"
     },
+    "license": "MIT",
+    "keywords": [
+        "case",
+        "camelCase",
+        "snake_case",
+        "kebab-case",
+        "formatter",
+        "text transform"
+    ],
+    "bugs": {
+        "url": "https://github.com/EfeDeveloper/format-switcher/issues"
+    },
+    "homepage": "https://github.com/EfeDeveloper/format-switcher#readme",
+    "galleryBanner": {
+        "color": "#1e1e2e",
+        "theme": "dark"
+    },
     "categories": [
-        "Other",
         "Formatters"
     ],
     "activationEvents": [],
@@ -21,53 +37,86 @@
     "contributes": {
         "commands": [
             {
-                "command": "extension.changeCase.camelCase",
-                "title": "CamelCase"
+                "command": "extension.formatSwitcher.lowerWords",
+                "title": "lower words"
             },
             {
-                "command": "extension.changeCase.snakeCase",
+                "command": "extension.formatSwitcher.upperWords",
+                "title": "UPPER WORDS"
+            },
+            {
+                "command": "extension.formatSwitcher.camelCase",
+                "title": "camelCase"
+            },
+            {
+                "command": "extension.formatSwitcher.snakeCase",
                 "title": "snake_case"
             },
             {
-                "command": "extension.changeCase.upperSnakeCase",
+                "command": "extension.formatSwitcher.upperSnakeCase",
                 "title": "CONSTANT_CASE"
             },
             {
-                "command": "extension.changeCase.kebabCase",
+                "command": "extension.formatSwitcher.kebabCase",
                 "title": "kebab-case"
             },
             {
-                "command": "extension.changeCase.trainCase",
+                "command": "extension.formatSwitcher.trainCase",
                 "title": "Train-Case"
+            },
+            {
+                "command": "extension.formatSwitcher.cycleCase",
+                "title": "Cycle Case Format"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "extension.formatSwitcher.cycleCase",
+                "key": "ctrl+shift+f",
+                "when": "editorTextFocus && editorHasSelection"
             }
         ],
         "submenus": [
             {
-                "id": "changeCaseSubmenuId",
-                "label": "ChangeCase 🔠"
+                "id": "formatSwitcherSubmenuId",
+                "label": "Change case"
             }
         ],
         "menus": {
             "editor/context": [
                 {
-                    "submenu": "changeCaseSubmenuId"
+                    "submenu": "formatSwitcherSubmenuId",
+                    "when": "editorHasSelection"
                 }
             ],
-            "changeCaseSubmenuId": [
+            "formatSwitcherSubmenuId": [
                 {
-                    "command": "extension.changeCase.camelCase"
+                    "command": "extension.formatSwitcher.camelCase",
+                    "group": "formats@1"
                 },
                 {
-                    "command": "extension.changeCase.snakeCase"
+                    "command": "extension.formatSwitcher.snakeCase",
+                    "group": "formats@2"
                 },
                 {
-                    "command": "extension.changeCase.upperSnakeCase"
+                    "command": "extension.formatSwitcher.kebabCase",
+                    "group": "formats@3"
                 },
                 {
-                    "command": "extension.changeCase.kebabCase"
+                    "command": "extension.formatSwitcher.upperSnakeCase",
+                    "group": "formats@4"
                 },
                 {
-                    "command": "extension.changeCase.trainCase"
+                    "command": "extension.formatSwitcher.trainCase",
+                    "group": "formats@5"
+                },
+                {
+                    "command": "extension.formatSwitcher.lowerWords",
+                    "group": "formats@6"
+                },
+                {
+                    "command": "extension.formatSwitcher.upperWords",
+                    "group": "formats@7"
                 }
             ]
         }
@@ -81,18 +130,15 @@
         "test": "vscode-test"
     },
     "devDependencies": {
-        "@types/lodash": "^4.14.202",
         "@types/mocha": "^10.0.6",
         "@types/node": "18.x",
         "@types/vscode": "^1.85.0",
         "@typescript-eslint/eslint-plugin": "^6.19.1",
         "@typescript-eslint/parser": "^6.19.1",
-        "@vscode/test-cli": "^0.0.4",
+        "@vscode/test-cli": "^0.0.10",
         "@vscode/test-electron": "^2.3.9",
         "eslint": "^8.56.0",
         "typescript": "^5.3.3"
     },
-    "dependencies": {
-        "lodash": "^4.17.21"
-    }
+    "dependencies": {}
 }

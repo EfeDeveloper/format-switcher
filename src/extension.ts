@@ -1,63 +1,85 @@
 import * as vscode from 'vscode';
-import lodash from 'lodash';
+import {
+  CaseType,
+  CYCLE_ORDER,
+  CONVERTERS,
+  detectCase,
+  toLowerWords,
+  toUpperWords,
+  toCamelCase,
+  toSnakeCase,
+  toUpperSnakeCase,
+  toKebabCase,
+  toTrainCase,
+} from './caseConverters';
 
-type CaseType = 'camelCase' | 'snakeCase' | 'Constant case' | 'kebabCase' | 'trainCase';
-
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
-    vscode.commands.registerCommand('extension.changeCase.camelCase', () => {
-      changeCase('camelCase');
-    }),
-    vscode.commands.registerCommand('extension.changeCase.snakeCase', () => {
-      changeCase('snakeCase');
-    }),
-    vscode.commands.registerCommand('extension.changeCase.upperSnakeCase', () => {
-      changeCase('Constant case');
-    }),
-    vscode.commands.registerCommand('extension.changeCase.kebabCase', () => {
-      changeCase('kebabCase');
-    }),
-    vscode.commands.registerCommand('extension.changeCase.trainCase', () => {
-      changeCase('trainCase');
-    })
+    vscode.commands.registerCommand('extension.formatSwitcher.lowerWords', () =>
+      applyCase((text) => toLowerWords(text)),
+    ),
+    vscode.commands.registerCommand('extension.formatSwitcher.upperWords', () =>
+      applyCase((text) => toUpperWords(text)),
+    ),
+    vscode.commands.registerCommand('extension.formatSwitcher.camelCase', () =>
+      applyCase((text) => toCamelCase(text)),
+    ),
+    vscode.commands.registerCommand('extension.formatSwitcher.snakeCase', () =>
+      applyCase((text) => toSnakeCase(text)),
+    ),
+    vscode.commands.registerCommand('extension.formatSwitcher.upperSnakeCase', () =>
+      applyCase((text) => toUpperSnakeCase(text)),
+    ),
+    vscode.commands.registerCommand('extension.formatSwitcher.kebabCase', () =>
+      applyCase((text) => toKebabCase(text)),
+    ),
+    vscode.commands.registerCommand('extension.formatSwitcher.trainCase', () =>
+      applyCase((text) => toTrainCase(text)),
+    ),
+    vscode.commands.registerCommand('extension.formatSwitcher.cycleCase', () =>
+      applyCase((text) => cycleConvert(text)),
+    ),
   );
 }
 
-async function changeCase(caseType: CaseType) {
+/**
+ * Applies a conversion function to every active selection in the editor.
+ * Supports multi-cursor. Skips empty selections with a status bar hint.
+ */
+async function applyCase(convert: (text: string) => string): Promise<void> {
   const editor = vscode.window.activeTextEditor;
   if (!editor) {
     return;
   }
 
-  const selection = editor.selection;
-  const text = editor.document.getText(selection);
+  const selections = editor.selections;
+  const allEmpty = selections.every((s) => s.isEmpty);
 
-  let convertedText: string;
-
-  switch (caseType) {
-    case 'camelCase':
-      convertedText = lodash.camelCase(text);
-      break;
-    case 'snakeCase':
-      convertedText = lodash.snakeCase(text);
-      break;
-    case 'Constant case':
-      convertedText = lodash.upperCase(text).replace(/\s/g, '_');
-      break;
-    case 'kebabCase':
-      convertedText = lodash.kebabCase(text);
-      break;
-    case 'trainCase':
-      convertedText = lodash.startCase(lodash.camelCase(text)).replace(/\s/g, '-');
-      break;
-    default:
-      convertedText = text;
-      break;
+  if (allEmpty) {
+    vscode.window.setStatusBarMessage('$(warning) Select text first', 3000);
+    return;
   }
 
   await editor.edit((editBuilder) => {
-    editBuilder.replace(selection, convertedText);
+    for (const selection of selections) {
+      if (selection.isEmpty) {
+        continue;
+      }
+      const text = editor.document.getText(selection);
+      editBuilder.replace(selection, convert(text));
+    }
   });
 }
 
-export function deactivate() {}
+/**
+ * Given some text, detects its current case format and returns the next
+ * one in the cycle order. Falls back to camelCase when undetected.
+ */
+function cycleConvert(text: string): string {
+  const current = detectCase(text);
+  const currentIndex = current === null ? -1 : CYCLE_ORDER.indexOf(current);
+  const nextType: CaseType = CYCLE_ORDER[(currentIndex + 1) % CYCLE_ORDER.length];
+  return CONVERTERS[nextType](text);
+}
+
+export function deactivate(): void {}
