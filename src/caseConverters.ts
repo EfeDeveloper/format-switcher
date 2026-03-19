@@ -7,7 +7,7 @@ export type CaseType =
   | 'kebabCase'
   | 'trainCase';
 
-/** Ordered cycle: each Ctrl+Shift+F advances to the next format */
+/** Ordered cycle: each Alt+Shift+L advances to the next format */
 export const CYCLE_ORDER: CaseType[] = [
   'camelCase',
   'snakeCase',
