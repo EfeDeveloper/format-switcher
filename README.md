@@ -56,13 +56,13 @@ Select any text, right-click, and choose **Change case** → pick the desired fo
 
 ## Keyboard Shortcut
 
-Press **`Ctrl+Shift+F`** with text selected to **cycle** through formats in order:
+Press **`Alt+Shift+L`** with text selected to **cycle** through formats in order:
 
 ```
 camelCase → snake_case → kebab-case → CONSTANT_CASE → Train-Case → lower words → UPPER WORDS → camelCase → …
 ```
 
-The shortcut only activates when the cursor is inside the editor with a selection, so it does not conflict with the default "Find in Files" shortcut. You can customise the keybinding any time via **File → Preferences → Keyboard Shortcuts**.
+The shortcut only activates when the cursor is inside the editor with a selection. You can customise the keybinding any time via **File → Preferences → Keyboard Shortcuts**.
 
 ## Contributing
 
