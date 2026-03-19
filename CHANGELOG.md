@@ -6,6 +6,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-03-18
+
+### Fixed
+
+- Keyboard shortcut changed from `Ctrl+Shift+F` to `Alt+Shift+C` to avoid conflict with VS Code's built-in "Find in Files" command.
+
 ## [1.0.0] - 2026-03-08
 
 ### Added
